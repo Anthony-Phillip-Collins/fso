@@ -1,0 +1,15 @@
+title 0.6: New note
+
+note over browser:
+on form submission browser executes js-code
+that re-renders notes including new note
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa with textfield value and date as payload e.g. {"content": "Hello World!", "date": "2022-09-15T06:29:54.701Z"} 
+
+server->browser: HTTP status code 201 and JSON-code i.e. {"message":"note created"}
+
+note over browser:
+browser executes the event handler
+that logs the responseText {"message":"note created"}
+end note
