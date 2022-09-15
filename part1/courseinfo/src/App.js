@@ -1,13 +1,15 @@
-const Header = (props) => <h1>{props.course}</h1>;
+const Header = ({ course }) => <h1>{course}</h1>;
 
-const Content = (props) =>
-  props.parts.map((part, indx) => (
-    <p key={indx}>
-      {part.title} {part.exercises}
-    </p>
-  ));
+const Part = ({ title, exercises }) => (
+  <p>
+    {title} {exercises}
+  </p>
+);
 
-const Total = (props) => <p>Number of exercises {props.total}</p>;
+const Content = ({ parts }) =>
+  parts.map((part, indx) => <Part key={indx} {...part} />);
+
+const Total = ({ total }) => <p>Number of exercises {total}</p>;
 
 const App = () => {
   const course = 'Half Stack application development';
