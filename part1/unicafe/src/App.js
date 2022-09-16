@@ -4,7 +4,7 @@ const Header = ({ title }) => <h1>{title}</h1>;
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
-const Statistic = ({ text, total }) => (
+const StatisticLine = ({ text, total }) => (
   <p>
     {text} {total}
   </p>
@@ -20,12 +20,12 @@ const Statistics = ({ title, good, neutral, bad }) => {
       <Header title={title} />
       {(all() === 0 && <p>No feedback given</p>) || (
         <>
-          <Statistic text='good' total={good} />
-          <Statistic text='neutral' total={neutral} />
-          <Statistic text='bad' total={bad} />
-          <Statistic text='all' total={all()} />
-          <Statistic text='average' total={average()} />
-          <Statistic text='positive' total={positive()} />
+          <StatisticLine text='good' total={good} />
+          <StatisticLine text='neutral' total={neutral} />
+          <StatisticLine text='bad' total={bad} />
+          <StatisticLine text='all' total={all()} />
+          <StatisticLine text='average' total={average()} />
+          <StatisticLine text='positive' total={positive()} />
         </>
       )}
     </>
