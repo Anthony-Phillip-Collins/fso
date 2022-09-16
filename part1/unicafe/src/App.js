@@ -18,13 +18,16 @@ const Statistics = ({ title, good, neutral, bad }) => {
   return (
     <>
       <Header title={title} />
-
-      <Statistic text='good' total={good} />
-      <Statistic text='neutral' total={neutral} />
-      <Statistic text='bad' total={bad} />
-      <Statistic text='all' total={all()} />
-      <Statistic text='average' total={average()} />
-      <Statistic text='positive' total={positive()} />
+      {(all() === 0 && <p>No feedback given</p>) || (
+        <>
+          <Statistic text='good' total={good} />
+          <Statistic text='neutral' total={neutral} />
+          <Statistic text='bad' total={bad} />
+          <Statistic text='all' total={all()} />
+          <Statistic text='average' total={average()} />
+          <Statistic text='positive' total={positive()} />
+        </>
+      )}
     </>
   );
 };
