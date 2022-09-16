@@ -11,7 +11,6 @@ const Statistic = ({ text, total }) => (
 );
 
 const App = () => {
-  // save clicks of each button to its own state
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
@@ -19,9 +18,14 @@ const App = () => {
   const feedbackTitle = 'give feedback';
   const statisticsTitle = 'statistics';
 
+  const all = () => good + neutral + bad;
+  const average = () => (all() > 0 && (good - bad) / all()) || 0;
+  const positive = () => `${(all() > 0 && (good / all()) * 100) || 0}%`;
+
   return (
     <>
       <Header title={feedbackTitle} />
+
       <Button
         onClick={() => {
           setGood(good + 1);
@@ -40,10 +44,15 @@ const App = () => {
         }}
         text='bad'
       />
+
       <Header title={statisticsTitle} />
+
       <Statistic text='good' total={good} />
       <Statistic text='neutral' total={neutral} />
       <Statistic text='bad' total={bad} />
+      <Statistic text='all' total={all()} />
+      <Statistic text='average' total={average()} />
+      <Statistic text='positive' total={positive()} />
     </>
   );
 };
