@@ -1,16 +1,11 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Countries from './components/Countries';
+import Search from './components/Search';
 
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    axios.get('https://restcountries.com/v3.1/all').then((response) => {
-      setCountries(response.data);
-    });
-  }, []);
 
   const onSearchChange = (event) => {
     setSearch(event.target.value.trim());
@@ -25,11 +20,15 @@ const App = () => {
 
   const filtered = filteredCountries();
 
+  useEffect(() => {
+    axios.get('https://restcountries.com/v3.1/all').then((response) => {
+      setCountries(response.data);
+    });
+  }, []);
+
   return (
     <>
-      <div>
-        find countries <input value={search} onChange={onSearchChange} />
-      </div>
+      <Search value={search} onChange={onSearchChange} />
       <div>
         {filtered.length > 10 ? (
           <p>Too many matches, specify another filter</p>
