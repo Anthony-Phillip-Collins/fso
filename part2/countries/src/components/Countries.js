@@ -1,40 +1,4 @@
-const Country = ({
-  expand = false,
-  country: {
-    area,
-    capital,
-    flag,
-    languages,
-    name: { common },
-  },
-}) => {
-  return (
-    <li>
-      <h2>{common}</h2>
-      {expand && (
-        <>
-          <div>capital: {capital[0]}</div>
-          <div>area: {area}</div>
-          <p>
-            <b>languages:</b>
-          </p>
-          <ul>
-            {Object.values(languages).map((lang) => (
-              <li key={lang}>{lang}</li>
-            ))}
-          </ul>
-          <div
-            style={{
-              fontSize: '10rem',
-            }}
-          >
-            {flag}
-          </div>
-        </>
-      )}
-    </li>
-  );
-};
+import Country from './Country';
 
 const Countries = ({ countries }) => {
   return (
