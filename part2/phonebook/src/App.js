@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
-import { getAll, create, remove } from './services/persons';
+import { getAll, create, remove, update } from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -19,18 +19,29 @@ const App = () => {
   const onSubmit = (event) => {
     event.preventDefault();
 
-    const exists = persons.filter(
-      ({ name }) => name.toLowerCase() === newName.toLowerCase()
-    )[0];
+    const newPerson = {
+      name: newName.trim(),
+      number: newNumber.trim(),
+    };
+
+    const exists = persons.find(
+      ({ name }) => name.toLowerCase() === newPerson.name.toLowerCase()
+    );
 
     if (exists) {
-      alert(`${exists.name} is already added to phonebook`);
+      if (
+        window.confirm(
+          `${exists.name} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        update({ ...exists, ...newPerson }).then((updated) => {
+          setPersons(persons.map((p) => (p.id === exists.id ? updated : p)));
+          setNewName('');
+          setNewNumber('');
+        });
+      }
     } else {
-      const person = {
-        name: newName,
-        number: newNumber,
-      };
-      create(person).then((person) => {
+      create(newPerson).then((person) => {
         setPersons(persons.concat(person));
         setNewName('');
         setNewNumber('');
@@ -39,15 +50,15 @@ const App = () => {
   };
 
   const onNameChange = (event) => {
-    setNewName(event.target.value.trim());
+    setNewName(event.target.value);
   };
 
   const onNumberChange = (event) => {
-    setNewNumber(event.target.value.trim());
+    setNewNumber(event.target.value);
   };
 
   const onFilteredChange = (event) => {
-    setFiltered(event.target.value.trim());
+    setFiltered(event.target.value);
   };
 
   const filteredPersons = () => {

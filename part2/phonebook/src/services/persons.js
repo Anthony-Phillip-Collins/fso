@@ -14,6 +14,12 @@ export const create = async (person) => {
   });
 };
 
+export const update = async (person) => {
+  return axios
+    .put(`${baseUrl}/${person.id}`, person)
+    .then((response) => response.data);
+};
+
 export const remove = async (id) => {
   return axios.delete(`${baseUrl}/${id}`).then((response) => response.data);
 };
