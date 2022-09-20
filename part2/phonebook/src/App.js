@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
-import { getAll, create } from './services/persons';
+import { getAll, create, remove } from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -29,7 +29,6 @@ const App = () => {
       const person = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1,
       };
       create(person).then((person) => {
         setPersons(persons.concat(person));
@@ -60,6 +59,15 @@ const App = () => {
     });
   };
 
+  const onDelete = ({ name, number, id }) => {
+    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+      remove(id).then((response) => {
+        const remaining = persons.filter((person) => person.id !== id);
+        setPersons([...remaining]);
+      });
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -78,7 +86,7 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <Persons persons={filteredPersons()} />
+      <Persons persons={filteredPersons()} onDelete={onDelete} />
     </div>
   );
 };

@@ -1,14 +1,10 @@
-const Person = ({ name, number }) => (
-  <li>
-    {name} {number}
-  </li>
-);
+import Person from './Person';
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, onDelete }) => {
   return (
     <ul style={{ listStyle: 'none', padding: '0' }}>
-      {persons.map(({ name, number }) => (
-        <Person key={name} {...{ name, number }} />
+      {persons.map(({ name, number, id }) => (
+        <Person key={name} {...{ name, number, id, onDelete }} />
       ))}
     </ul>
   );
