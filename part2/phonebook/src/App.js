@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [filtered, setFiltered] = useState('');
   const [message, setMessage] = useState('');
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     getAll()
@@ -18,13 +19,21 @@ const App = () => {
         setPersons(persons);
       })
       .catch((error) => {
-        showNotification('Something went wrong. Can’t connect to database.');
+        showNotification({
+          message: 'Something went wrong. Can’t connect to database.',
+          isError: true,
+        });
       });
   }, []);
 
-  const showNotification = (message) => {
+  const showNotification = ({ message, isError = false }) => {
     setMessage(message);
-    setTimeout(() => setMessage(''), 3000);
+    setHasError(isError);
+
+    setTimeout(() => {
+      setHasError(false);
+      setMessage('');
+    }, 3000);
   };
 
   const onSubmit = (event) => {
@@ -50,12 +59,15 @@ const App = () => {
             setPersons(persons.map((p) => (p.id === exists.id ? updated : p)));
             setNewName('');
             setNewNumber('');
-            showNotification(
-              `${updated.name}’s phone number has been updated.`
-            );
+            showNotification({
+              message: `${updated.name}’s phone number has been updated.`,
+            });
           })
           .catch((error) => {
-            showNotification('Person doesn’t exist in the database!');
+            showNotification({
+              message: 'Person doesn’t exist in the database!',
+              isError: true,
+            });
           });
       }
     } else {
@@ -64,10 +76,13 @@ const App = () => {
           setPersons(persons.concat(person));
           setNewName('');
           setNewNumber('');
-          showNotification(`${person.name} has been created`);
+          showNotification({ message: `${person.name} has been created` });
         })
         .catch((error) => {
-          showNotification(error.message);
+          showNotification({
+            message: 'There has been an error with the database.',
+            isError: true,
+          });
         });
     }
   };
@@ -78,10 +93,13 @@ const App = () => {
         .then((response) => {
           const remaining = persons.filter((person) => person.id !== id);
           setPersons([...remaining]);
-          showNotification(`${name} has been deleted.`);
+          showNotification({ message: `${name} has been deleted.` });
         })
         .catch((error) => {
-          showNotification('Person doesn’t exist in the database!');
+          showNotification({
+            message: 'Person doesn’t exist in the database!',
+            isError: true,
+          });
         });
     }
   };
@@ -111,7 +129,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Notification message={message} />
+      <Notification message={message} isError={hasError} />
 
       <Filter value={filtered} onChange={onFilteredChange} />
 
