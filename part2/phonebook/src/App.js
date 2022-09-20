@@ -11,9 +11,13 @@ const App = () => {
   const [filtered, setFiltered] = useState('');
 
   useEffect(() => {
-    getAll().then((persons) => {
-      setPersons(persons);
-    });
+    getAll()
+      .then((persons) => {
+        setPersons(persons);
+      })
+      .catch((error) => {
+        alert('Something went wrong. Can’t connect to database.');
+      });
   }, []);
 
   const onSubmit = (event) => {
@@ -34,18 +38,26 @@ const App = () => {
           `${exists.name} is already added to phonebook, replace the old number with a new one?`
         )
       ) {
-        update({ ...exists, ...newPerson }).then((updated) => {
-          setPersons(persons.map((p) => (p.id === exists.id ? updated : p)));
-          setNewName('');
-          setNewNumber('');
-        });
+        update({ ...exists, ...newPerson })
+          .then((updated) => {
+            setPersons(persons.map((p) => (p.id === exists.id ? updated : p)));
+            setNewName('');
+            setNewNumber('');
+          })
+          .catch((error) => {
+            alert('Person doesn’t exist in the database!');
+          });
       }
     } else {
-      create(newPerson).then((person) => {
-        setPersons(persons.concat(person));
-        setNewName('');
-        setNewNumber('');
-      });
+      create(newPerson)
+        .then((person) => {
+          setPersons(persons.concat(person));
+          setNewName('');
+          setNewNumber('');
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
     }
   };
 
@@ -72,10 +84,14 @@ const App = () => {
 
   const onDelete = ({ name, number, id }) => {
     if (window.confirm(`Are you sure you want to delete ${name}?`)) {
-      remove(id).then((response) => {
-        const remaining = persons.filter((person) => person.id !== id);
-        setPersons([...remaining]);
-      });
+      remove(id)
+        .then((response) => {
+          const remaining = persons.filter((person) => person.id !== id);
+          setPersons([...remaining]);
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
     }
   };
 

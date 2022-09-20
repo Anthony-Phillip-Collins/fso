@@ -7,6 +7,10 @@ export const getAll = async () => {
 };
 
 export const create = async (person) => {
+  if (!person.name || !person.number) {
+    throw new Error('Please provide a name and number');
+  }
+
   return getAll().then((persons) => {
     const ids = persons.map(({ id }) => id);
     person.id = Math.max(...ids) + 1;
