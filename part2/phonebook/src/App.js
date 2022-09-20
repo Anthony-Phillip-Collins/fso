@@ -26,15 +26,16 @@ const App = () => {
     if (exists) {
       alert(`${exists.name} is already added to phonebook`);
     } else {
-      setPersons(
-        persons.concat({
-          name: newName,
-          number: newNumber,
-          id: persons.length + 1,
-        })
-      );
-      setNewName('');
-      setNewNumber('');
+      const person = {
+        name: newName,
+        number: newNumber,
+        id: persons.length + 1,
+      };
+      axios.post('http://localhost:3001/persons', person).then((response) => {
+        setPersons(persons.concat(response.data));
+        setNewName('');
+        setNewNumber('');
+      });
     }
   };
 
