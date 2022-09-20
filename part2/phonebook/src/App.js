@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import { getAll, create, remove, update } from './services/persons';
@@ -9,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filtered, setFiltered] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     getAll()
@@ -16,9 +18,14 @@ const App = () => {
         setPersons(persons);
       })
       .catch((error) => {
-        alert('Something went wrong. Can’t connect to database.');
+        showNotification('Something went wrong. Can’t connect to database.');
       });
   }, []);
+
+  const showNotification = (message) => {
+    setMessage(message);
+    setTimeout(() => setMessage(''), 3000);
+  };
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -43,9 +50,12 @@ const App = () => {
             setPersons(persons.map((p) => (p.id === exists.id ? updated : p)));
             setNewName('');
             setNewNumber('');
+            showNotification(
+              `${updated.name}’s phone number has been updated.`
+            );
           })
           .catch((error) => {
-            alert('Person doesn’t exist in the database!');
+            showNotification('Person doesn’t exist in the database!');
           });
       }
     } else {
@@ -54,9 +64,24 @@ const App = () => {
           setPersons(persons.concat(person));
           setNewName('');
           setNewNumber('');
+          showNotification(`${person.name} has been created`);
         })
         .catch((error) => {
-          alert(error.message);
+          showNotification(error.message);
+        });
+    }
+  };
+
+  const onDelete = ({ name, number, id }) => {
+    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+      remove(id)
+        .then((response) => {
+          const remaining = persons.filter((person) => person.id !== id);
+          setPersons([...remaining]);
+          showNotification(`${name} has been deleted.`);
+        })
+        .catch((error) => {
+          showNotification('Person doesn’t exist in the database!');
         });
     }
   };
@@ -82,22 +107,11 @@ const App = () => {
     });
   };
 
-  const onDelete = ({ name, number, id }) => {
-    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
-      remove(id)
-        .then((response) => {
-          const remaining = persons.filter((person) => person.id !== id);
-          setPersons([...remaining]);
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    }
-  };
-
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={message} />
 
       <Filter value={filtered} onChange={onFilteredChange} />
 

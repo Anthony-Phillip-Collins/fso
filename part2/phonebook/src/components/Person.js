@@ -1,6 +1,6 @@
 const Person = ({ name, number, id, onDelete }) => (
   <li>
-    {id} {name} {number}{' '}
+    {name} {number}{' '}
     <button
       onClick={() => {
         onDelete({ name, number, id });
