@@ -33,7 +33,7 @@ const App = () => {
     setTimeout(() => {
       setHasError(false);
       setMessage('');
-    }, 3000);
+    }, 5000);
   };
 
   const onSubmit = (event) => {
