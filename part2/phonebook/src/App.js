@@ -65,7 +65,7 @@ const App = () => {
           })
           .catch((error) => {
             showNotification({
-              message: 'Person doesn’t exist in the database!',
+              message: error.response.data.error.message,
               isError: true,
             });
           });
@@ -80,7 +80,7 @@ const App = () => {
         })
         .catch((error) => {
           showNotification({
-            message: 'There has been an error with the database.',
+            message: error.response.data.error.message,
             isError: true,
           });
         });
@@ -97,7 +97,7 @@ const App = () => {
         })
         .catch((error) => {
           showNotification({
-            message: 'Person doesn’t exist in the database!',
+            message: error.response.data.error.message,
             isError: true,
           });
         });
